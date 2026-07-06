@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="column is-4 is-offset-4">
+    <h3 class="title">Authenticate</h3>
+    <div class="box">
+        {% with messages = get_flashed_messages() %}
+            {% if Err %}
+                <div class="notification is-danger">
+                    {{ Err}}
+                </div>
+            {% endif %}
+        {% endwith %}
+        <form method="POST" action="/login">
+
+
+            <div class="field">
+                <div class="control">
+                    <input class="input is-large" type="password" name="authToken" placeholder="Your Passowrd">
+                </div>
+            </div>
+
+            <button class="button is-block is-info is-large is-fullwidth">Authenticate</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

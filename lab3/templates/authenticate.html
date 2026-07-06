@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1 class="title">
+    You are successfully authenticated!
+</h1>
+<form name="start_infinc" action="/get_temp" method="POST">
+    <input type="hidden" name="authToken" value={{Token}}>
+    <button type="submit">Get Temperature!</button>
+</form>
+<br>
+<form name="set_temp_c" action="/set_temp_c" method="POST">
+    <input type="hidden" name="authToken" value={{Token}}>
+    <button type="submit">Set Temperature to C!</button>
+</form>
+<form name="set_temp_f" action="/set_temp_f" method="POST">
+    <input type="hidden" name="authToken" value={{Token}}>
+    <button type="submit">Set Temperature to F!</button>
+</form>
+<form name="set_temp_k" action="/set_temp_k" method="POST">
+    <input type="hidden" name="authToken" value={{Token}}>
+    <button type="submit">Set Temperature to K!</button>
+</form>
+<br>
+<h1 class="title">
+    Temperature is: {{Temp}}
+</h1>
+<h1 class="title">
+    Token is: {{Token}}
+</h1>
+{% endblock %}
+
