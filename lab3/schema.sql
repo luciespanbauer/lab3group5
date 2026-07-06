@@ -1,6 +1,0 @@
-DROP TABLE IF EXISTS users;
-
-CREATE TABLE users (
-    u_id INTEGER PRIMARY KEY,
-    password TEXT NOT NULL
-);
