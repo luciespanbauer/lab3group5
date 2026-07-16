@@ -1,0 +1,21 @@
+# Local environment and generated secrets
+.env
+.env.*
+!.env.example
+.secrets/
+*.secret
+*.key
+*.pem
+
+# Python caches and test output
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.coverage
+.coverage.*
+htmlcov/
+
+# Operating-system junk
+.DS_Store
+Thumbs.db

@@ -9,24 +9,101 @@ Please carefully read and understand about the Infant incubator and answer the f
 1. Find the SQL injection of the login page. You need to submit a screenshot of the screen after having logged in using the payload you find.
 2. Retrieve the plaintext password from the database and submit the same.
 
-# Steps to run the application on local
+# Secure setup and local operation
 
-1. Open the terminal, make sure you are in the root directory
-2. Run the following command to install all the requirements whilst in the root directory: pip3 install -r requirements.txt
-3. Run the SampleNetworkServer.py file using the following command: python3 SampleNetworkServer.py
-4. You will be able to see the incubator working now
-5. Now we need to run the flask application
-6. Open a new terminal window
-7. Type the following commands in succession:
-- Ensure you are in the root directory
-- export FLASK_APP="app.py"
-- flask run
-- If you run into any errors you update your python
+Coding Task 2 requires two environment variables. There are no default
+credentials or keys; the server, client, and Flask app fail closed when either
+required value is missing or invalid.
 
-8. The application will start running on the localhost and you will be able to open the same in browser using the link mentioned in the console
-9. Run that link in the browser where you will see the flask application running.
+- `INCUBATOR_AUTH_PASSWORD`: a strong, unique authentication password.
+- `INCUBATOR_TRANSPORT_KEY`: a Base64-encoded value that decodes to exactly 32
+  random bytes for AES-256-GCM.
 
-Incase the above steps are not working you can communicate with the TA's to help you out.
+The values in `.env.example` are placeholders only. Do not put a real password,
+transport key, token, or other secret in Git. A local `.env` file is ignored,
+but this project does not automatically load it; export secrets into the process
+environment using an appropriate local secret manager or shell facility.
+
+Generate a new transport key with:
+
+```text
+python -c "import base64, secrets; print(base64.b64encode(secrets.token_bytes(32)).decode())"
+```
+
+Example PowerShell setup (the values exist only in that terminal process):
+
+```powershell
+$password = Read-Host "Incubator authentication password" -AsSecureString
+$env:INCUBATOR_AUTH_PASSWORD = [System.Net.NetworkCredential]::new("", $password).Password
+$env:INCUBATOR_TRANSPORT_KEY = python -c "import base64, secrets; print(base64.b64encode(secrets.token_bytes(32)).decode())"
+```
+
+For Bash-compatible shells, read the password without echoing it and export a
+new key:
+
+```bash
+read -r -s -p "Incubator authentication password: " INCUBATOR_AUTH_PASSWORD
+export INCUBATOR_AUTH_PASSWORD
+export INCUBATOR_TRANSPORT_KEY="$(python -c "import base64, secrets; print(base64.b64encode(secrets.token_bytes(32)).decode())")"
+```
+
+Install the pinned dependencies from `lab3/`:
+
+```text
+python -m pip install -r requirements.txt
+```
+
+Start the simulator and secure UDP servers in the configured terminal:
+
+```text
+python SampleNetworkServer.py
+```
+
+In a second configured terminal, start Flask on loopback:
+
+```text
+python -m flask --app app run --host 127.0.0.1
+```
+
+The built-in Flask server is for local development only. For a non-loopback
+deployment, terminate HTTPS at a production web server and set
+`INCUBATOR_COOKIE_SECURE=1`; otherwise browser credentials would not have
+transport protection. The UDP application traffic itself is always encrypted
+and authenticated.
+
+Run the automated Coding Task 2 suite from the repository root:
+
+```text
+python -m unittest discover -s lab3/tests -v
+```
+
+Run the manual authentication/logout smoke test while the simulator is running:
+
+```text
+python lab3/test.py
+```
+
+## Secure protocol migration notice
+
+The old plaintext UDP protocol is intentionally incompatible and is not
+supported as a fallback. Every authentication attempt, token, command,
+temperature response, normal response, and error response now uses a versioned
+JSON envelope protected by AES-256-GCM with a fresh random nonce. Base64 makes
+the binary envelope safe to carry in a UDP datagram; Base64 is encoding, not
+encryption. AES-GCM supplies confidentiality and integrity.
+
+Sessions expire after 15 minutes of inactivity and each thermometer permits at
+most 100 active sessions. At capacity, the least recently used session is
+evicted. The server stores SHA-256 token digests, binds sessions to the client's
+IP address and UDP port, and rejects replays using a bounded, expiring request-ID
+cache. Consequently, a client must keep its UDP socket open for the life of its
+session. `SimpleNetworkClient` does this and applies a two-second default
+timeout; callers should close it or use it as a context manager.
+
+Both client and server must use the same transport key and have reasonably
+synchronized clocks. Key rotation invalidates in-flight packets and existing
+browser token envelopes, so restart both sides and log in again after rotating a
+key.
 
 ## Submission
 
