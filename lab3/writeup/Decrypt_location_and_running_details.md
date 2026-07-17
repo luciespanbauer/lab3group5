@@ -1,1 +1,4 @@
-Where to find decrypt.py
+Where to find decrypt.py:
+
+
+How to run:
