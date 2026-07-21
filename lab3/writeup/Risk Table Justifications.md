@@ -62,3 +62,18 @@ This risk assessment assumes the infant incubator application is deployed on a n
 
 **Risk:** A low likelihood combined with a critical impact results in a **Medium** risk. We agree with this risk rating because physical access presents a significant barrier to an attacker, but successful exploitation could have life-threatening consequences.
 
+### Threat 7 – Temperature Readings Tampered
+
+**Likelihood:** Medium. An attacker would need to gain access to the client, network traffic, or auth token to modify the temperature readings. Since the application uses network communication and relies on accurate temperature data for monitoring, this threat is very possible.
+
+**Impact:** Critical. Tampered temperature readings could cause monitors or automated components to falsely believe the incubator is operating within safety parameters. Incorrect temperature information could result in undesired functionality placing the infant at risk.
+
+**Risk:** A medium likelihood combined with a critical impact results in a **High** risk. We agree with this risk rating because the attacker needs some level of access, but the consequences of incorrect temperature readings could directly affect patient safety.
+
+### Threat 8 – Audit/Accountability Failure
+
+**Likelihood:** Medium. This threat is realistic if the system fails to accurately record authentication attempts, configuration changes, or processes. Without continuing, accurate logging, activity may not be traceable. This is especially important following an incident.
+
+**Impact:** High. If the system does not maintain reliable logging, it will be difficult to allign actions with identity and when a given action occured. This would delay investigation efforts, recovery, and risk resiliancy.
+
+**Risk:** A medium likelihood combined with a high impact results in a **Medium** risk. We agree with this risk rating because audit failure may not directly change the incubator environment by itself, but it nonetheless compromises integrety and accountability.
