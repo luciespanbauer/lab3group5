@@ -76,4 +76,4 @@ This risk assessment assumes the infant incubator application is deployed on a n
 
 **Impact:** High. If the system does not maintain reliable logging, it will be difficult to allign actions with identity and when a given action occured. This would delay investigation efforts, recovery, and risk resiliancy.
 
-**Risk:** A medium likelihood combined with a high impact results in a **Medium** risk. We agree with this risk rating because audit failure may not directly change the incubator environment by itself, but it nonetheless compromises integrety and accountability.
+**Risk:** A medium likelihood combined with a high impact results in a **Medium** risk. We agree with this risk rating because audit failure may not directly change the incubator environment by itself, but it nonetheless compromises integrity and accountability.
